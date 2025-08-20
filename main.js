@@ -3,44 +3,71 @@ const CURRENCY = document.cookie.split('; ')
     .find(cookie => cookie.startsWith('currency='))
     ?.split('=')[1] || 'USD';
 
-// TODO: When searching for original price, add exception cus sometimes it writes "FREE"
-// MAYBE: colorise items to green, red and gradient for ex.
 // MAYBE: change from odds to range ( could be more precise )
 
 const main = ()=>{
-    const list_items = document.querySelectorAll(`
-        .ContainerGroupedItem >
-        .ContainerGroupedItem_chances >
-        .chances_table >
-        tbody >
-        .table_row
-    `);
+    const skins_containers = document.querySelectorAll('.ContainerGroupedItem');
 
+    const skins = [...skins_containers].map((container)=>{
+        const gradient = container.querySelector('.ContainerGroupedItem_quality-gradient');
+        const chances = container.querySelectorAll(`
+            .ContainerGroupedItem_chances >
+            .chances_table >
+            tbody >
+            .table_row
+        `);
+
+        return {
+            container,
+            gradient,
+            chances,
+            avg_price: 0
+        }
+    });
+
+    // TODO: When searching for original price, add exception cus sometimes it writes "FREE"
     const price_label = document.querySelector('.ContainerPrice > .Currency');
     const original_price = parseFloat(price_label.textContent.trim());
-    
-    let avg_price = 0,
+
+    let avg_case_gain = 0,
         odds_to_gain = 0,   // Gain or make 0
         odds_to_lose = 0;
 
-    list_items.forEach(item => {
-        let [_, price, __, odds] = [...item.querySelectorAll('td')].map(child => child.textContent.trim());
+    
+    skins.forEach(( skin ) => {
+        let prices_by_odds = 0,
+            sum_of_odds = 0;
 
-        price = parseFloat(price);
-        odds = parseFloat(odds);
+        skin.chances.forEach((chance_row) => {
+            let [_, price, __, odds] = [...chance_row.querySelectorAll('td')].map(child => child.textContent.trim());
 
-        if(price < original_price) odds_to_lose += odds;
-        else odds_to_gain += odds;
+            price = parseFloat(price);
+            odds = parseFloat(odds);
 
-        avg_price += price * odds;
+            if(price < original_price) odds_to_lose += odds;
+            else odds_to_gain += odds;
+
+            prices_by_odds += price * odds;
+            sum_of_odds += odds;
+
+            avg_case_gain += price * odds;
+        });
+
+        skin.avg_price = Math.round(prices_by_odds / sum_of_odds * 100) / 100;
+
+        const gradient_color = skin.avg_price < original_price ? 'red' : 'green';
+        skin.gradient.style.backgroundImage = `linear-gradient(180deg, transparent 0, ${gradient_color} 100%)`;
+
     });
 
-    avg_price = Math.round(avg_price) / 100;
+    avg_case_gain = Math.round(avg_case_gain) / 100;
     odds_to_gain = Math.round(odds_to_gain);
     odds_to_lose = Math.round(odds_to_lose);
 
     setTimeout(()=>{
-        price_label.textContent += ` (avg: ${avg_price} ${CURRENCY})`;
+        const span_case_gain = document.createElement('span');
+        span_case_gain.textContent = ` (avg: ${avg_case_gain} ${CURRENCY})`;
+        price_label.appendChild(span_case_gain);
 
         const span_to_gain = document.createElement('span');
         span_to_gain.textContent = ` (${odds_to_gain}%)`;
@@ -51,9 +78,8 @@ const main = ()=>{
         span_to_lose.textContent = ` (${odds_to_lose}%)`;
         span_to_lose.style.color = "red";
         price_label.appendChild(span_to_lose);
-
-    }, 1000);
-
+    }, 1000)
+    
 }
 
 main();
