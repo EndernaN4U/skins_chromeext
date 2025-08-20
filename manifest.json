@@ -1,0 +1,9 @@
+{
+    "manifest_version": 3,
+    "name": "CsgoskinsExtension",
+    "version": "1.0.0",
+    "content_scripts": [{
+        "matches": ["https://csgo-skins.com/case/*"],
+        "js": ["main.js"]
+    }]
+}
