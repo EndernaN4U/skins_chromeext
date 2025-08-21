@@ -1,14 +1,28 @@
-const CURRENCY = document.cookie.split('; ')
-    .map(cookie => cookie.trim())
-    .find(cookie => cookie.startsWith('currency='))
-    ?.split('=')[1] || 'USD';
+// CURRENCY
+const currencies_symbols = {
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "PLN": "zł",
+    "TRY": "₺"
+}
 
-// MAYBE: change from odds to range ( could be more precise )
+const retrieve_currency_symbol = () => {
+    const currency_name = document.cookie.split('; ')
+        .map(cookie => cookie.trim())
+        .find(cookie => cookie.startsWith('currency='))
+        ?.split('=')[1] || 'USD';
 
-const main = ()=>{
+    return currencies_symbols[currency_name] || currencies_symbols['USD'];
+}
+
+const CURRENCY = retrieve_currency_symbol();
+
+
+const retrieve_case_skins = () => {
     const skins_containers = document.querySelectorAll('.ContainerGroupedItem');
 
-    const skins = [...skins_containers].map((container)=>{
+    return [...skins_containers].map((container) => {
         const gradient = container.querySelector('.ContainerGroupedItem_quality-gradient');
         const chances = container.querySelectorAll(`
             .ContainerGroupedItem_chances >
@@ -24,15 +38,26 @@ const main = ()=>{
             avg_price: 0
         }
     });
+}
 
-    // TODO: When searching for original price, add exception cus sometimes it writes "FREE"
+const make_span = (text, color = null) => {
+    const span = document.createElement('span');
+    span.textContent = text;
+
+    if(color) span.style.color = color;
+
+    return span;
+}
+
+const main = ()=>{
+    const skins = retrieve_case_skins();
+
     const price_label = document.querySelector('.ContainerPrice > .Currency');
     const original_price = parseFloat(price_label.textContent.trim());
 
     let avg_case_gain = 0,
         odds_to_gain = 0,   // Gain or make 0
         odds_to_lose = 0;
-
     
     skins.forEach(( skin ) => {
         let prices_by_odds = 0,
@@ -65,19 +90,9 @@ const main = ()=>{
     odds_to_lose = Math.round(odds_to_lose);
 
     setTimeout(()=>{
-        const span_case_gain = document.createElement('span');
-        span_case_gain.textContent = ` (avg: ${avg_case_gain} ${CURRENCY})`;
-        price_label.appendChild(span_case_gain);
-
-        const span_to_gain = document.createElement('span');
-        span_to_gain.textContent = ` (${odds_to_gain}%)`;
-        span_to_gain.style.color = "green";
-        price_label.appendChild(span_to_gain);
-
-        const span_to_lose = document.createElement('span');
-        span_to_lose.textContent = ` (${odds_to_lose}%)`;
-        span_to_lose.style.color = "red";
-        price_label.appendChild(span_to_lose);
+        price_label.appendChild(make_span(` (avg: ${avg_case_gain} ${CURRENCY})`));
+        price_label.appendChild(make_span(` (${odds_to_gain}%)`, "green"));
+        price_label.appendChild(make_span(` (${odds_to_lose}%)`, "red"));
     }, 1000)
     
 }
