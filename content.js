@@ -1,11 +1,10 @@
-// CURRENCY
 const currencies_symbols = {
     "USD": "$",
     "EUR": "€",
     "GBP": "£",
     "PLN": "zł",
     "TRY": "₺"
-}
+};
 
 const retrieve_currency_symbol = () => {
     const currency_name = document.cookie.split('; ')
@@ -49,7 +48,7 @@ const make_span = (text, color = null) => {
     return span;
 }
 
-const main = ()=>{
+const inject_content = ()=>{
     const skins = retrieve_case_skins();
 
     const price_label = document.querySelector('.ContainerPrice > .Currency');
@@ -89,12 +88,16 @@ const main = ()=>{
     odds_to_gain = Math.round(odds_to_gain);
     odds_to_lose = Math.round(odds_to_lose);
 
-    setTimeout(()=>{
-        price_label.appendChild(make_span(` (avg: ${avg_case_gain} ${CURRENCY})`));
-        price_label.appendChild(make_span(` (${odds_to_gain}%)`, "green"));
-        price_label.appendChild(make_span(` (${odds_to_lose}%)`, "red"));
-    }, 1000)
-    
+    price_label.appendChild(make_span(` (avg: ${avg_case_gain} ${CURRENCY})`));
+    price_label.appendChild(make_span(` (${odds_to_gain}%)`, "green"));
+    price_label.appendChild(make_span(` (${odds_to_lose}%)`, "red"));
 }
 
-main();
+(() => {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        setTimeout(() => {
+            inject_content();
+        }, 1000);
+    });
+})();
+

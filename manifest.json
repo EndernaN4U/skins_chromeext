@@ -3,7 +3,11 @@
     "name": "CsgoskinsExtension",
     "version": "1.0.0",
     "content_scripts": [{
-        "matches": ["https://csgo-skins.com/case/*"],
-        "js": ["main.js"]
-    }]
+        "matches": ["https://csgo-skins.com/*"],
+        "js": ["content.js"]
+    }],
+    "permissions": ["tabs", "webNavigation"],
+    "background": {
+        "service_worker": "background.js"
+    }
 }
