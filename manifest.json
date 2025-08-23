@@ -4,7 +4,12 @@
     "version": "1.0.0",
     "content_scripts": [{
         "matches": ["https://csgo-skins.com/*"],
-        "js": ["content.js"]
+        "js": [
+            "content.js",
+            "utils/currency.js",
+            "utils/html_elems.js",
+            "skins/page_data.js"
+        ]
     }],
     "permissions": ["tabs", "webNavigation"],
     "background": {
