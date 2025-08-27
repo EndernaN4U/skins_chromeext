@@ -24,7 +24,7 @@ const inject_content = ()=>{
     const skins = retrieve_case_skins();
 
     const price_label = document.querySelector('.ContainerPrice > .Currency');
-    const original_price = parseFloat(price_label.textContent.trim());
+    const original_price = parse_currency(price_label.textContent);
 
     let avg_case_gain = 0,
         odds_to_gain = 0,   // Gain or make 0
@@ -35,9 +35,9 @@ const inject_content = ()=>{
             sum_of_odds = 0;
 
         skin.chances.forEach((chance_row) => {
-            let [_, price, __, odds] = [...chance_row.querySelectorAll('td')].map(child => child.textContent.trim());
+            let [_, price, __, odds] = [...chance_row.querySelectorAll('td')].map(child => child.textContent);
 
-            price = parseFloat(price);
+            price = parse_currency(price);
             odds = parseFloat(odds);
 
             if(price < original_price) odds_to_lose += odds;

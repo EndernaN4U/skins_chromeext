@@ -14,3 +14,10 @@ const retrieve_currency_symbol = () => {
 
     return currencies_symbols[currency_name];
 }
+
+const PREFIX_REGEX = /^\D*/;
+
+// Value should be string like "$5.50"
+const parse_currency = (value) =>{
+    return parseFloat(value.trim().replace(PREFIX_REGEX, ''));
+}
