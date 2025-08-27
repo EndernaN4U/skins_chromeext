@@ -8,7 +8,8 @@
             "content.js",
             "utils/currency.js",
             "utils/html_elems.js",
-            "skins/page_data.js"
+            "skins/page_data.js",
+            "skins/case_skins.js"
         ]
     }],
     "permissions": ["tabs", "webNavigation"],

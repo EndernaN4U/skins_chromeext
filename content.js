@@ -1,29 +1,8 @@
-const retrieve_case_skins = () => {
-    const skins_containers = document.querySelectorAll('.ContainerGroupedItem');
-
-    return [...skins_containers].map((container) => {
-        const gradient = container.querySelector('.ContainerGroupedItem_quality-gradient');
-        const chances = container.querySelectorAll(`
-            .ContainerGroupedItem_chances >
-            .chances_table >
-            tbody >
-            .table_row
-        `);
-
-        return {
-            container,
-            gradient,
-            chances,
-            avg_price: 0
-        }
-    });
-}
-
 const inject_content = ()=>{
     const currency = retrieve_currency_symbol();
     const skins = retrieve_case_skins();
 
-    const price_label = document.querySelector('.ContainerPrice > .Currency');
+    const price_label = document.querySelector(PAGE_CONFIG.price_label);
     const original_price = parse_currency(price_label.textContent);
 
     let avg_case_gain = 0,
@@ -60,9 +39,9 @@ const inject_content = ()=>{
     odds_to_gain = Math.round(odds_to_gain);
     odds_to_lose = Math.round(odds_to_lose);
 
-    price_label.appendChild(make_span(` (avg: ${avg_case_gain} ${currency})`));
-    price_label.appendChild(make_span(` (${odds_to_gain}%)`, "green"));
-    price_label.appendChild(make_span(` (${odds_to_lose}%)`, "red"));
+    price_label.appendChild(make_span(`(avg: ${avg_case_gain} ${currency})`));
+    price_label.appendChild(make_span(`(${odds_to_gain}%)`, "green"));
+    price_label.appendChild(make_span(`(${odds_to_lose}%)`, "red"));
 }
 
 
