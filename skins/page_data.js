@@ -1,6 +1,6 @@
 // Its page to save 
 const PAGE_CONFIG = {
-    price_label: ".ContainerPrice > .Currency",
+    price_label: ".ContainerPrice > span",
 
     skins_container: ".ContainerGroupedItem",
     skin_gradient: ".ContainerGroupedItem_quality-gradient", // Inside skin container
