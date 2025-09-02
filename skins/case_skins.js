@@ -1,3 +1,4 @@
+// Function to retrieve case skins information from the page
 const retrieve_case_skins = () => {
     const skins_containers = document.querySelectorAll(PAGE_CONFIG.skins_container);
 

@@ -1,4 +1,4 @@
-// Its page to save 
+// Page config for query selector used in code
 const PAGE_CONFIG = {
     price_label: ".ContainerPrice > span",
 

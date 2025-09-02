@@ -30,9 +30,10 @@ const inject_content = ()=>{
     odds_to_gain = Math.round(odds_to_gain);
     odds_to_lose = Math.round(odds_to_lose);
 
+    // Append case infos
     price_label.appendChild(make_span(` (avg: ${avg_case_gain} ${currency})`));
 
-    if(original_price){
+    if(original_price){     // If original price is available 
         price_label.appendChild(make_span(`(${odds_to_gain}%)`, "green"));
         price_label.appendChild(make_span(`(${odds_to_lose}%)`, "red"));
     }
@@ -43,7 +44,7 @@ const inject_content = ()=>{
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         setTimeout(() => {
             inject_content();
-        }, 1000);
+        }, 1000);   // Delay injection to allow for DOM updates
     });
 })();
 
